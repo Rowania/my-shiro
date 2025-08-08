@@ -21,8 +21,13 @@ function useLocalStorage<T>(key: string, initialValue: T) {
   })
 
   const setStoredValue = (newValue: T | ((prev: T) => T)) => {
-    const valueToStore =
-      typeof newValue === 'function' ? newValue(value) : newValue
+    let valueToStore: T
+    if (typeof newValue === 'function') {
+      // 明确类型转换
+      valueToStore = (newValue as (prev: T) => T)(value)
+    } else {
+      valueToStore = newValue
+    }
     setValue(valueToStore)
     if (typeof window !== 'undefined') {
       localStorage.setItem(key, JSON.stringify(valueToStore))
