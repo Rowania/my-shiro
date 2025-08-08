@@ -1,6 +1,6 @@
 /* eslint-disable @eslint-react/no-missing-key */
 import type { ReactNode } from 'react'
-import { memo, useEffect, useMemo, useRef,useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 
 import { BilibiliIcon } from '~/components/icons/platform/BilibiliIcon'
 import { BlueskyIcon } from '~/components/icons/platform/BlueskyIcon'
