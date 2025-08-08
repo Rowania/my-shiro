@@ -12,10 +12,11 @@ export const Hitokoto = () => {
     queryKey: ['hitokoto'],
     queryFn: () =>
       fetchHitokoto([
-        SentenceType.动画,
+        SentenceType.诗词,
         SentenceType.原创,
         SentenceType.哲学,
         SentenceType.文学,
+        SentenceType.抖机灵,
       ]),
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
@@ -39,8 +40,8 @@ export const Hitokoto = () => {
   if (isLoading) return <div className="loading loading-dots" />
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="leading-normal">{hitokoto}</span>
-      <div className="ml-0 flex items-center space-x-2">
+      <span className="text-base leading-normal">{hitokoto}</span>
+      <div className="ml-2 mt-1 flex items-center space-x-2">
         <MotionButtonBase onClick={() => refetch()}>
           <i className="i-mingcute-refresh-2-line" />
         </MotionButtonBase>

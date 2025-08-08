@@ -6,8 +6,6 @@ import NextBundleAnalyzer from '@next/bundle-analyzer'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 import { config } from 'dotenv'
 
- 
-
 process.title = 'Shiro (NextJS)'
 
 const env = config().parsed || {}
@@ -26,7 +24,7 @@ if (repoInfo) {
 }
 
 /** @type {import('next').NextConfig} */
- 
+
 let nextConfig = {
   // logging: {
   //   fetches: {
@@ -35,7 +33,6 @@ let nextConfig = {
   //   },
   // },
   env: {
-     
     COMMIT_HASH: commitHash,
     COMMIT_URL: commitUrl,
   },

@@ -76,7 +76,8 @@ const TwoColumnLayout = ({
             key={i}
             className={clsxm(
               'flex w-full flex-col center lg:h-auto lg:w-1/2',
-
+              // 左边向右对齐，右边向左对齐
+              i === 0 ? 'lg:items-end lg:pr-8' : 'lg:items-center lg:pr-26',
               i === 0 ? leftContainerClassName : rightContainerClassName,
             )}
           >
