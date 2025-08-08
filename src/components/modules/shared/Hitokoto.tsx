@@ -20,7 +20,7 @@ export const Hitokoto = () => {
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     staleTime: 0,
-    cacheTime: 0,
+    gcTime: 0,
     select(data) {
       const postfix = Object.values({
         from: data.from,
