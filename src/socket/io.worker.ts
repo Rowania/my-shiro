@@ -15,7 +15,7 @@ function setupIo(config: { url: string; socket_session_id: string }) {
     reconnectionDelay: 3000,
     autoConnect: false,
     reconnectionAttempts: 3,
-    transports: ['websocket'],
+    transports: ['websocket', 'polling'], // 添加polling作为备用
 
     query: {
       socket_session_id: config.socket_session_id,
