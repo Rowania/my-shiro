@@ -33,6 +33,9 @@ export const getUserUrl = <
     case 'github': {
       return `https://github.com/${user.handle}`
     }
+    case 'google': {
+      return `https://accounts.google.com/profile/${user.handle}`
+    }
   }
 
   return

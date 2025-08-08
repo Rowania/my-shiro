@@ -19,6 +19,7 @@ import {
   RMixPlanet,
 } from '~/components/icons/menu-collection'
 import { isSupportIcon, SocialIcon } from '~/components/modules/home/SocialIcon'
+import { Hitokoto } from '~/components/modules/shared/Hitokoto'
 import { usePresentSubscribeModal } from '~/components/modules/subscribe'
 import { StyledButton } from '~/components/ui/button'
 import { NumberSmoothTransition } from '~/components/ui/number-transition/NumberSmoothTransition'
@@ -186,9 +187,9 @@ const Hero = () => {
             'center text-neutral-800/80 dark:text-neutral-200/80',
           )}
         >
-          <small className="text-center">
-            当第一颗卫星飞向大气层外，我们便以为自己终有一日会征服宇宙。
-          </small>
+          <div className="text-center">
+            <Hitokoto />
+          </div>
           <span className="mt-8 animate-bounce">
             <i className="i-mingcute-right-line rotate-90 text-2xl" />
           </span>

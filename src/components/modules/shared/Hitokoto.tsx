@@ -17,8 +17,10 @@ export const Hitokoto = () => {
         SentenceType.哲学,
         SentenceType.文学,
       ]),
-    refetchInterval: 1000 * 60 * 60 * 24,
-    staleTime: Infinity,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    cacheTime: 0,
     select(data) {
       const postfix = Object.values({
         from: data.from,
