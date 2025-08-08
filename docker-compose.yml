@@ -3,7 +3,7 @@ version: '3'
 services:
   shiro:
     container_name: shiro
-    image: innei/shiro:latest
+    image: rowania/shiro:latest
     volumes:
       - ./.env:/app/.env
       - ./public:/app/public
