@@ -1,9 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
+import { useEffect, useRef, useState } from 'react'
 
 import { MotionButtonBase } from '~/components/ui/button'
 import { toast } from '~/lib/toast'
 
 export const Hitokoto = () => {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isWrapped, setIsWrapped] = useState(false)
+
   const {
     data: hitokoto,
     refetch,
@@ -36,24 +40,54 @@ export const Hitokoto = () => {
     },
   })
 
+  useEffect(() => {
+    const checkWrapping = () => {
+      if (containerRef.current) {
+        const container = containerRef.current
+        const span = container.querySelector('span')
+        const buttonDiv = container.querySelector('div:last-child')
+
+        if (span && buttonDiv) {
+          const spanRect = span.getBoundingClientRect()
+          const buttonRect = buttonDiv.getBoundingClientRect()
+
+          // 如果按钮的顶部位置大于文本的顶部位置，说明换行了
+          setIsWrapped(buttonRect.top > spanRect.top + 5)
+        }
+      }
+    }
+
+    checkWrapping()
+    window.addEventListener('resize', checkWrapping)
+
+    return () => window.removeEventListener('resize', checkWrapping)
+  }, [hitokoto])
+
   if (!hitokoto) return null
   if (isLoading) return <div className="loading loading-dots" />
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div
+      ref={containerRef}
+      className="flex flex-wrap items-center justify-center gap-2"
+    >
       <span className="text-base leading-normal">{hitokoto}</span>
-      <div className="ml-2 mt-1 flex items-center space-x-2">
+      <div
+        className={`flex items-center space-x-2 ${isWrapped ? '-ml-0.7' : 'ml-2 mt-1'}`}
+      >
         <MotionButtonBase onClick={() => refetch()}>
-          <i className="i-mingcute-refresh-2-line" />
+          <i className="i-mingcute-refresh-2-line text-gray-400 dark:text-gray-400" />
         </MotionButtonBase>
 
         <MotionButtonBase
           onClick={() => {
-            navigator.clipboard.writeText(hitokoto)
-            toast.success('已复制')
-            toast.info(hitokoto)
+            if (hitokoto) {
+              navigator.clipboard.writeText(hitokoto)
+              toast.success('已复制')
+              toast.info(hitokoto)
+            }
           }}
         >
-          <i className="i-mingcute-copy-line" />
+          <i className="i-mingcute-copy-line text-gray-400 dark:text-gray-400" />
         </MotionButtonBase>
       </div>
     </div>

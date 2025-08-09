@@ -192,7 +192,7 @@ const Hero = () => {
             <Hitokoto />
           </div>
           <span className="mt-8 animate-bounce">
-            <i className="i-mingcute-right-line rotate-90 text-2xl" />
+            <i className="i-mingcute-right-line rotate-90 text-2xl text-gray-500 dark:text-gray-400" />
           </span>
         </m.div>
       </TwoColumnLayout>

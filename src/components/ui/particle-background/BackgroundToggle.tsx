@@ -153,6 +153,11 @@ const BackgroundToggleButton = ({
             粒子可以互动哦
           </div>
         )}
+        {nextBackgroundName === '星空' && (
+          <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+            最下面设置为夜间模式效果更佳
+          </div>
+        )}
       </div>
     </FloatPopover>
   )
