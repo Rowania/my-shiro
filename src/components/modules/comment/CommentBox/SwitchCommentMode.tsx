@@ -25,6 +25,7 @@ const SwitchCommentModeButton = () => {
     <>
       <i
         className={clsx(
+          'translate-y-0.5',
           mode === CommentBoxMode.legacy
             ? 'i-mingcute-user-4-line'
             : 'i-material-symbols-dynamic-form-outline',
@@ -48,12 +49,13 @@ export const SwitchCommentMode = () => {
   return (
     <MotionButtonBase
       className={clsx(
-        'absolute left-0 top-0 z-10 rounded-full text-sm',
+        'absolute left-0 top-0 z-10 rounded-full',
         'size-6 border border-slate-200 dark:border-neutral-800',
         'bg-slate-100 dark:bg-neutral-900',
-        'center flex cursor-pointer',
-        'text-base-content/50',
-        'opacity-0 transition-opacity duration-200 group-[:hover]:opacity-100',
+        'center flex cursor-pointer items-center justify-center',
+        'text-accent hover:text-accent/80',
+        'opacity-100 transition-opacity duration-200',
+        'text-base',
         mode === CommentBoxMode['legacy'] && 'bottom-0 top-auto',
         hasText ||
           (notLogged &&

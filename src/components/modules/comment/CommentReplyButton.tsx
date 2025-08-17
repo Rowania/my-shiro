@@ -29,13 +29,15 @@ export const CommentReplyButton: FC<{
           'border border-slate-200 bg-zinc-100 dark:border-neutral-700 dark:bg-gray-800',
           'invisible cursor-pointer opacity-0',
           'group-[:hover]:visible group-[:hover]:opacity-70',
+          'duration-50 transition-all',
+          'hover:border-accent hover:bg-accent/5',
           className,
         )}
         onClick={() => {
           setReplyFormOpen((o) => !o)
         }}
       >
-        <i className="i-mingcute-comment-line" />
+        <i className="group-hover:scale-130 i-mingcute-comment-line text-base text-gray-600 transition-all duration-500 group-hover:text-accent dark:text-gray-300" />
       </button>
       <CommentBoxHolderPortal>
         <CommentIsReplyProvider

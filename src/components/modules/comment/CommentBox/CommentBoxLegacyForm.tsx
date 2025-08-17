@@ -22,7 +22,7 @@ const taClassName =
 type FormKey = 'author' | 'mail' | 'url'
 const placeholderMap = {
   author: '昵称',
-  mail: '邮箱',
+  mail: '邮箱(作为你的标识, 生成个性头像)',
   url: '网址',
 } as const
 

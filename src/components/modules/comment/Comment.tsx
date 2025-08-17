@@ -119,7 +119,7 @@ export const Comment: Component<{
             <div
               className={clsx(
                 'flex shrink-0 self-end md:relative md:w-9',
-                'absolute top-2',
+                'absolute top-1',
               )}
             >
               <Avatar

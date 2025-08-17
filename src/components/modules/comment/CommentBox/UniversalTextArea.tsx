@@ -120,27 +120,25 @@ export const UniversalTextArea: Component = ({ className }) => {
       }}
     >
       <CommentBoxSlotPortal>
-        {!isMobile && (
-          <FloatPopover
-            mobileAsSheet
-            trigger="click"
-            triggerElement={
-              <div
-                className="center ml-0 inline-flex size-5 translate-y-1 text-base md:ml-4"
-                role="button"
-                tabIndex={0}
-              >
-                <i className="i-mingcute-emoji-2-line" />
-                <span className="sr-only">表情</span>
-              </div>
-            }
-            headless
-            popoverWrapperClassNames="z-[999]"
-            popoverClassNames="pointer-events-auto"
-          >
-            <EmojiPicker onEmojiSelect={handleInsertEmoji} />
-          </FloatPopover>
-        )}
+        <FloatPopover
+          mobileAsSheet
+          trigger="click"
+          triggerElement={
+            <div
+              className="center ml-0 inline-flex size-5 translate-y-1 text-base md:ml-4"
+              role="button"
+              tabIndex={0}
+            >
+              <i className="i-mingcute-emoji-2-line" />
+              <span className="sr-only">表情</span>
+            </div>
+          }
+          headless
+          popoverWrapperClassNames="z-[999]"
+          popoverClassNames="pointer-events-auto"
+        >
+          <EmojiPicker onEmojiSelect={handleInsertEmoji} />
+        </FloatPopover>
       </CommentBoxSlotPortal>
     </TextArea>
   )
