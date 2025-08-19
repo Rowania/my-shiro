@@ -16,18 +16,34 @@ export const isLoggedAtom = atom(false)
 
 export const login = async (username?: string, password?: string) => {
   if (username && password) {
-    const user = await apiClient.user.login(username, password).catch((err) => {
-      console.error(err)
-      toast.error('再试试哦')
-      throw err
-    })
-    if (user) {
-      const { token } = user
-      setToken(token)
-      jotaiStore.set(isLoggedAtom, true)
+    try {
+      const user = await apiClient.user
+        .login(username, password)
+        .catch((err) => {
+          console.error(err)
+          toast.error('再试试哦')
+          throw err
+        })
+      if (user) {
+        const { token } = user
+        setToken(token)
+        jotaiStore.set(isLoggedAtom, true)
 
-      await fetchAppUrl()
-      toast.success(`欢迎回来，${jotaiStore.get(ownerAtom)?.name}`)
+        await fetchAppUrl()
+        toast.success(`欢迎回来，${jotaiStore.get(ownerAtom)?.name}`)
+      }
+    } catch (error) {
+      console.error('Login process failed', error)
+      // Even if fetchAppUrl fails, we should consider the user logged in.
+      // The app URL can be fetched later.
+      // But if the login API itself fails, the error is thrown and caught here.
+      const token = getToken()
+      if (token) {
+        // If token is set, login is successful, but fetching url failed.
+        // We can proceed.
+        return true
+      }
+      return false
     }
 
     return true

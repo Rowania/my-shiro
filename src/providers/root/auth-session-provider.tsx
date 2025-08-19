@@ -5,13 +5,14 @@ import { useEffect } from 'react'
 
 import { fetchAppUrl, isLoggedAtom } from '~/atoms'
 import { setSessionReader } from '~/atoms/hooks/reader'
+import { PageLoading } from '~/components/layout/dashboard/PageLoading'
 import type { authClient } from '~/lib/authjs'
 import { apiClient } from '~/lib/request'
 import { jotaiStore } from '~/lib/store'
 
 type AdapterUser = typeof authClient.$Infer.Session
 export const AuthSessionProvider: Component = ({ children }) => {
-  const { data: session } = useQuery({
+  const { data: session, isLoading } = useQuery({
     queryKey: ['session'],
     refetchOnMount: 'always',
     queryFn: () =>
@@ -31,5 +32,9 @@ export const AuthSessionProvider: Component = ({ children }) => {
       fetchAppUrl()
     }
   }, [session])
+
+  if (isLoading) {
+    return <PageLoading />
+  }
   return children
 }
