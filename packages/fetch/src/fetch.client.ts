@@ -22,6 +22,7 @@ if (isServerSide) {
 export const $fetch = createFetch({
   defaults: {
     timeout: 8000,
+    credentials: 'include', // 确保包含cookie
     // next: { revalidate: 3 },
     headers: globalConfigureHeader,
     onRequest(context) {
