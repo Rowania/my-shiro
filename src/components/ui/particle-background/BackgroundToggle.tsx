@@ -155,7 +155,7 @@ const BackgroundToggleButton = ({
         )}
         {nextBackgroundName === '星空' && (
           <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            最下面设置为夜间模式效果更佳
+            页面下方设置夜间模式效果更佳
           </div>
         )}
       </div>

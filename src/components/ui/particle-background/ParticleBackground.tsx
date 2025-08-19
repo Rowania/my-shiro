@@ -25,8 +25,9 @@ class Particle {
     totalHeight: number = canvasHeight,
   ) {
     this.originalX = Math.random() * canvasWidth
-    // 确保粒子分布在整个文档高度范围内
-    const distributionHeight = Math.max(totalHeight, canvasHeight * 5)
+    // 确保粒子分布在整个文档高度范围内，而不是固定的5倍视口高度
+    // 使用实际的文档高度，最小不低于视口高度的3倍
+    const distributionHeight = Math.max(totalHeight, canvasHeight * 3)
     this.originalY = Math.random() * distributionHeight
     this.x = this.originalX
     this.y = this.originalY
@@ -60,6 +61,7 @@ class Particle {
     canvasWidth: number,
     canvasHeight: number,
     scrollY: number,
+    totalHeight: number = canvasHeight,
   ) {
     // 计算屏幕坐标用于鼠标交互
     const screenY = this.y - scrollY
@@ -109,20 +111,14 @@ class Particle {
       this.vy = (this.vy / currentSpeed) * minSpeed
     }
 
-    // 边界检查 - 基于世界坐标
+    // 边界检查 - 基于实际文档高度
+    const actualHeight = Math.max(totalHeight, canvasHeight * 3)
     if (this.originalX < 0 || this.originalX > canvasWidth) this.vx *= -1
-    if (
-      this.originalY < 0 ||
-      this.originalY > Math.max(canvasHeight * 5, canvasHeight)
-    )
-      this.vy *= -1
+    if (this.originalY < 0 || this.originalY > actualHeight) this.vy *= -1
 
     // 保持在世界坐标范围内
     this.originalX = Math.max(0, Math.min(canvasWidth, this.originalX))
-    this.originalY = Math.max(
-      0,
-      Math.min(Math.max(canvasHeight * 5, canvasHeight), this.originalY),
-    )
+    this.originalY = Math.max(0, Math.min(actualHeight, this.originalY))
 
     // 更新显示坐标
     this.x = this.originalX
@@ -170,9 +166,9 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
   const visibleParticlesCacheRef = useRef<Particle[]>([])
   const frameSkipCounterRef = useRef(0)
 
-  // 硬编码配置 - 使用密度而不是固定数量
-  const PARTICLE_DENSITY = 0.00003 // 每平方像素的粒子数量
-  const MAX_PARTICLES = 150 // 限制最大粒子数量
+  // 硬编码配置 - 基于视口面积密度，确保在不同设备上密度一致
+  const PARTICLES_PER_VIEWPORT_AREA = 0.00002 // 每平方像素的粒子数量（视口单位）
+  const MAX_PARTICLES = 500 // 增加最大粒子数以支持长页面
   const FPS_LIMIT = 60 // 限制帧率
   const CONNECTION_DISTANCE = 100 // 连线距离
 
@@ -218,10 +214,14 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
         if (canvas) {
           // 重新创建粒子
           particlesRef.current = []
-          // 基于密度计算粒子数量：总面积 = 宽度 × 文档高度
-          const totalArea = window.innerWidth * currentHeight
+          // 基于视口面积密度计算粒子总数：确保在不同设备上密度一致
+          const viewportArea = window.innerWidth * window.innerHeight
+          const viewportCount = Math.ceil(currentHeight / window.innerHeight)
+          const particlesPerViewport = Math.floor(
+            viewportArea * PARTICLES_PER_VIEWPORT_AREA,
+          )
           const adjustedParticleCount = Math.min(
-            Math.floor(totalArea * PARTICLE_DENSITY),
+            viewportCount * particlesPerViewport,
             MAX_PARTICLES,
           )
 
@@ -260,8 +260,8 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
       const dpr = window.devicePixelRatio || 1
       canvas.width = window.innerWidth * dpr
       canvas.height = window.innerHeight * dpr
-      canvas.style.width = `${window.innerWidth  }px`
-      canvas.style.height = `${window.innerHeight  }px`
+      canvas.style.width = `${window.innerWidth}px`
+      canvas.style.height = `${window.innerHeight}px`
       ctx.scale(dpr, dpr)
 
       // 重新创建粒子
@@ -275,16 +275,20 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
           document.documentElement.clientHeight || 0,
           document.documentElement.scrollHeight || 0,
           document.documentElement.offsetHeight || 0,
-          window.innerHeight * 5,
+          window.innerHeight * 3, // 从5倍改为3倍
         )
       }
 
       const documentHeight = getDocumentHeight()
 
-      // 基于密度计算粒子数量：总面积 = 宽度 × 文档高度
-      const totalArea = window.innerWidth * documentHeight
+      // 基于视口面积密度计算粒子总数：确保在不同设备上密度一致
+      const viewportArea = window.innerWidth * window.innerHeight
+      const viewportCount = Math.ceil(documentHeight / window.innerHeight)
+      const particlesPerViewport = Math.floor(
+        viewportArea * PARTICLES_PER_VIEWPORT_AREA,
+      )
       const adjustedParticleCount = Math.min(
-        Math.floor(totalArea * PARTICLE_DENSITY),
+        viewportCount * particlesPerViewport,
         MAX_PARTICLES,
       )
 
@@ -346,12 +350,24 @@ export const ParticleBackground: React.FC<ParticleBackgroundProps> = ({
       // 只更新和绘制可见粒子
       visibleParticlesCacheRef.current.forEach((particle) => {
         particle.updatePosition(scrollYRef.current)
+
+        // 获取当前文档高度
+        const currentDocumentHeight = Math.max(
+          document.body.scrollHeight || 0,
+          document.body.offsetHeight || 0,
+          document.documentElement.clientHeight || 0,
+          document.documentElement.scrollHeight || 0,
+          document.documentElement.offsetHeight || 0,
+          window.innerHeight * 3,
+        )
+
         particle.update(
           mouseX,
           mouseY,
           window.innerWidth,
           window.innerHeight,
           scrollYRef.current,
+          currentDocumentHeight,
         )
 
         const screenPos = particle.getScreenPosition(scrollYRef.current)

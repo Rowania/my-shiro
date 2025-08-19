@@ -28,8 +28,9 @@ class Star {
     totalHeight: number = canvasHeight,
   ) {
     this.originalX = Math.random() * canvasWidth
-    // 确保星星分布在整个文档高度范围内，使用更大的范围
-    const distributionHeight = Math.max(totalHeight, canvasHeight * 5)
+    // 确保星星分布在整个文档高度范围内，与粒子背景保持一致
+    // 使用实际的文档高度，最小不低于视口高度的3倍
+    const distributionHeight = Math.max(totalHeight, canvasHeight * 3)
     this.originalY = Math.random() * distributionHeight
     this.x = this.originalX
     this.y = this.originalY
@@ -119,22 +120,26 @@ class ShootingStar {
     // 从屏幕边缘开始
     const side = Math.floor(Math.random() * 4)
     switch (side) {
-      case 0: { // 上边
+      case 0: {
+        // 上边
         this.x = Math.random() * canvasWidth
         this.y = -50
         break
       }
-      case 1: { // 右边
+      case 1: {
+        // 右边
         this.x = canvasWidth + 50
         this.y = Math.random() * canvasHeight
         break
       }
-      case 2: { // 下边
+      case 2: {
+        // 下边
         this.x = Math.random() * canvasWidth
         this.y = canvasHeight + 50
         break
       }
-      default: { // 左边
+      default: {
+        // 左边
         this.x = -50
         this.y = Math.random() * canvasHeight
       }
@@ -225,9 +230,9 @@ export const StarryBackground: React.FC<StarryBackgroundProps> = ({
   const visibleStarsCacheRef = useRef<Star[]>([])
   const frameSkipCounterRef = useRef(0)
 
-  // 硬编码配置 - 使用密度而不是固定数量
-  const STAR_DENSITY = 0.0002 // 每平方像素的星星数量
-  const MAX_STARS = 200 // 限制最大星星数量
+  // 硬编码配置 - 基于视口面积密度
+  const STARS_PER_VIEWPORT_AREA = 0.00006 // 每平方像素的星星数量（视口单位）
+  const MAX_STARS = 600 // 增加最大星星数以支持长页面
   const SHOOTING_STAR_FREQUENCY = 0.004
   const MAX_SHOOTING_STARS = 5 // 最大流星数量
   const FPS_LIMIT = 60 // 限制帧率
@@ -261,7 +266,7 @@ export const StarryBackground: React.FC<StarryBackgroundProps> = ({
         document.documentElement.clientHeight || 0,
         document.documentElement.scrollHeight || 0,
         document.documentElement.offsetHeight || 0,
-        window.innerHeight * 5,
+        window.innerHeight * 3, // 从5倍改为3倍，与粒子背景保持一致
       )
 
       if (
@@ -277,10 +282,14 @@ export const StarryBackground: React.FC<StarryBackgroundProps> = ({
             const isDark = theme === 'dark'
             // 重新创建星星
             starsRef.current = []
-            // 基于密度计算星星数量：总面积 = 宽度 × 文档高度
-            const totalArea = window.innerWidth * currentHeight
+            // 基于视口面积密度计算星星总数：确保在不同设备上密度一致
+            const viewportArea = window.innerWidth * window.innerHeight
+            const viewportCount = Math.ceil(currentHeight / window.innerHeight)
+            const starsPerViewport = Math.floor(
+              viewportArea * STARS_PER_VIEWPORT_AREA,
+            )
             const adjustedStarCount = Math.min(
-              Math.floor(totalArea * STAR_DENSITY),
+              viewportCount * starsPerViewport,
               MAX_STARS,
             )
 
@@ -323,8 +332,8 @@ export const StarryBackground: React.FC<StarryBackgroundProps> = ({
       const dpr = window.devicePixelRatio || 1
       canvas.width = window.innerWidth * dpr
       canvas.height = window.innerHeight * dpr
-      canvas.style.width = `${window.innerWidth  }px`
-      canvas.style.height = `${window.innerHeight  }px`
+      canvas.style.width = `${window.innerWidth}px`
+      canvas.style.height = `${window.innerHeight}px`
       ctx.scale(dpr, dpr)
 
       // 重新创建星星
@@ -338,24 +347,28 @@ export const StarryBackground: React.FC<StarryBackgroundProps> = ({
           document.documentElement.clientHeight || 0,
           document.documentElement.scrollHeight || 0,
           document.documentElement.offsetHeight || 0,
-          window.innerHeight * 5, // 确保最小高度
+          window.innerHeight * 3, // 从5倍改为3倍，与粒子背景保持一致
         )
       }
 
       const documentHeight = getDocumentHeight()
 
-      // 基于密度计算星星数量：总面积 = 宽度 × 文档高度
-      const totalArea = window.innerWidth * documentHeight
+      // 基于视口面积密度计算星星总数：确保在不同设备上密度一致
+      const viewportArea = window.innerWidth * window.innerHeight
+      const viewportCount = Math.ceil(documentHeight / window.innerHeight)
+      const starsPerViewport = Math.floor(
+        viewportArea * STARS_PER_VIEWPORT_AREA,
+      )
       const adjustedStarCount = Math.min(
-        Math.floor(totalArea * STAR_DENSITY),
+        viewportCount * starsPerViewport,
         MAX_STARS,
       )
 
       console.log(
         'Document height:',
         documentHeight,
-        'Total area:',
-        totalArea,
+        'Viewport count:',
+        viewportCount,
         'Star count:',
         adjustedStarCount,
       )
