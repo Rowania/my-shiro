@@ -134,13 +134,38 @@ export function UserAuth() {
               )}
               <DropdownMenuItem
                 onClick={async () => {
-                  getToken() && apiClient.user.proxy('logout').post()
-                  removeToken()
-                  await authClient.signOut().then((res) => {
-                    if (res.data?.success) {
-                      window.location.reload()
+                  try {
+                    // 1. 先调用后端登出API (如果有token的话)
+                    const token = getToken()
+                    if (token) {
+                      await apiClient.user.proxy('logout').post()
                     }
-                  })
+
+                    // 2. 清除本地token
+                    removeToken()
+
+                    // 3. 重置登录状态
+                    const { jotaiStore } = await import('~/lib/store')
+                    const { isLoggedAtom } = await import('~/atoms/owner')
+                    jotaiStore.set(isLoggedAtom, false)
+
+                    // 4. 调用better-auth登出
+                    await authClient.signOut()
+
+                    // 5. 强制刷新页面
+                    window.location.reload()
+                  } catch (error) {
+                    console.error('Logout error:', error)
+                    // 即使出错也要清除本地状态
+                    removeToken()
+
+                    // 清除登录状态
+                    const { jotaiStore } = await import('~/lib/store')
+                    const { isLoggedAtom } = await import('~/atoms/owner')
+                    jotaiStore.set(isLoggedAtom, false)
+
+                    window.location.reload()
+                  }
                 }}
                 icon={<i className="i-mingcute-exit-line size-4" />}
               >
