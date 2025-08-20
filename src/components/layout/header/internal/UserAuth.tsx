@@ -152,23 +152,26 @@ export function UserAuth() {
                     // 4. 调用better-auth登出
                     await authClient.signOut()
 
-                    // 5. 等待一短暂时间确保状态清理完成，然后重定向到首页
-                    setTimeout(() => {
-                      window.location.href = '/'
-                    }, 100)
+                    // 5. 清除localStorage和sessionStorage
+                    localStorage.clear()
+                    sessionStorage.clear()
+
+                    // 6. 强制刷新页面到首页 (不使用cache)
+                    window.location.replace('/')
                   } catch (error) {
                     console.error('Logout error:', error)
                     // 即使出错也要清除本地状态
                     removeToken()
+                    localStorage.clear()
+                    sessionStorage.clear()
 
                     // 清除登录状态
                     const { jotaiStore } = await import('~/lib/store')
                     const { isLoggedAtom } = await import('~/atoms/owner')
                     jotaiStore.set(isLoggedAtom, false)
 
-                    setTimeout(() => {
-                      window.location.href = '/'
-                    }, 100)
+                    // 强制刷新页面
+                    window.location.replace('/')
                   }
                 }}
                 icon={<i className="i-mingcute-exit-line size-4" />}
