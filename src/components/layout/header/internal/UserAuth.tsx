@@ -152,8 +152,10 @@ export function UserAuth() {
                     // 4. 调用better-auth登出
                     await authClient.signOut()
 
-                    // 5. 强制刷新页面
-                    window.location.reload()
+                    // 5. 等待一短暂时间确保状态清理完成，然后重定向到首页
+                    setTimeout(() => {
+                      window.location.href = '/'
+                    }, 100)
                   } catch (error) {
                     console.error('Logout error:', error)
                     // 即使出错也要清除本地状态
@@ -164,7 +166,9 @@ export function UserAuth() {
                     const { isLoggedAtom } = await import('~/atoms/owner')
                     jotaiStore.set(isLoggedAtom, false)
 
-                    window.location.reload()
+                    setTimeout(() => {
+                      window.location.href = '/'
+                    }, 100)
                   }
                 }}
                 icon={<i className="i-mingcute-exit-line size-4" />}
