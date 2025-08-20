@@ -176,7 +176,7 @@ export function UserAuth() {
                 }}
                 icon={<i className="i-mingcute-exit-line size-4" />}
               >
-                登出
+                登出(若未生效，刷新即可)
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenuPortal>

@@ -23,10 +23,51 @@ function setupIo(config: { url: string; socket_session_id: string }) {
   })
   if (!ws) return
 
-  ws.on('disconnect', () => {
+  ws.on('disconnect', (reason) => {
+    console.info('WebSocket disconnected from SharedWorker, reason:', reason)
     boardcast({
       type: 'disconnect',
+      payload: reason,
     })
+  })
+
+  ws.on('connect_error', (error) => {
+    console.error('WebSocket connection error:', error)
+    console.error('Error details:', {
+      message: error.message,
+      description: (error as any).description,
+      context: (error as any).context,
+      type: (error as any).type,
+    })
+    boardcast({
+      type: 'error',
+      payload: {
+        message: error.message,
+        description: (error as any).description,
+        context: (error as any).context,
+        type: (error as any).type,
+      },
+    })
+  })
+
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error)
+  })
+
+  ws.on('reconnect', (attemptNumber) => {
+    console.info('WebSocket reconnected, attempt:', attemptNumber)
+  })
+
+  ws.on('reconnect_attempt', (attemptNumber) => {
+    console.info('WebSocket reconnect attempt:', attemptNumber)
+  })
+
+  ws.on('reconnect_error', (error) => {
+    console.error('WebSocket reconnect error:', error)
+  })
+
+  ws.on('reconnect_failed', () => {
+    console.error('WebSocket reconnect failed after all attempts')
   })
 
   /**
