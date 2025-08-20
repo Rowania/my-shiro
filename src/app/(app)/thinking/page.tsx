@@ -176,20 +176,26 @@ const List = () => {
       return acc + cur.length
     }, 0)
 
-    animate(
-      'li',
-      {
-        opacity: 1,
-        y: 0,
-      },
-      {
-        duration: 0.2,
-        delay: stagger(0.1, {
-          startDelay: 0.15,
-          from: count ? count - FETCH_SIZE : 0,
-        }),
-      },
-    )
+    // 使用 setTimeout 确保 DOM 已经渲染
+    setTimeout(() => {
+      const elements = scope.current?.querySelectorAll('li')
+      if (elements && elements.length > 0) {
+        animate(
+          scope.current.querySelectorAll('li'),
+          {
+            opacity: 1,
+            y: 0,
+          },
+          {
+            duration: 0.2,
+            delay: stagger(0.1, {
+              startDelay: 0.15,
+              from: count ? count - FETCH_SIZE : 0,
+            }),
+          },
+        )
+      }
+    }, 0)
   }, [data])
 
   if (isLoading) <Loading useDefaultLoadingText />

@@ -37,7 +37,7 @@ export const headerMenuConfig: IHeaderMenu[] = [
     path: '/posts',
     type: 'Post',
     subMenu: [],
-    icon: h(IcTwotoneSignpost),
+    icon: h(IonBook),
   },
   {
     title: '手记',
@@ -46,21 +46,20 @@ export const headerMenuConfig: IHeaderMenu[] = [
     icon: h(FaSolidFeatherAlt),
     exclude: ['/notes/topics'],
   },
-
+  {
+    title: '思考',
+    icon: h(MdiLightbulbOn20),
+    path: '/thinking',
+  },
   {
     title: '时光',
     icon: h(FaSolidHistory),
     path: '/timeline',
     subMenu: [
       {
-        title: '手记',
-        icon: h(FaSolidFeatherAlt),
-        path: '/timeline?type=note',
-      },
-      {
-        title: '文稿',
-        icon: h(IonBook),
-        path: '/timeline?type=post',
+        title: '一言',
+        path: '/says',
+        icon: h(FaSolidComments),
       },
       {
         title: '回忆',
@@ -70,37 +69,24 @@ export const headerMenuConfig: IHeaderMenu[] = [
       {
         title: '专栏',
         path: '/notes/topics',
-        icon: h('i', {
-          className: 'i-mingcute-align-bottom-fill flex center',
-        }),
+        icon: h(IcTwotoneSignpost),
       },
     ],
   },
-  {
-    title: '友链',
-    icon: h(FaSolidUserFriends),
-    path: '/friends',
-  },
-
   {
     title: '更多',
     icon: h(FaSolidCircleNotch),
     path: '#',
     subMenu: [
       {
-        title: '思考',
-        icon: h(MdiLightbulbOn20),
-        path: '/thinking',
+        title: '友链',
+        icon: h(FaSolidUserFriends),
+        path: '/friends',
       },
       {
         title: '项目',
         icon: h(MdiFlask),
         path: '/projects',
-      },
-      {
-        title: '一言',
-        path: '/says',
-        icon: h(FaSolidComments),
       },
       {
         title: '跃迁',

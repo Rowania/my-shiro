@@ -18,7 +18,8 @@ export default ({ error, reset }: any) => {
         <h2 className="mb-5 text-center">
           <p>渲染页面时出现了错误</p>
           <p>
-            多次出现错误请联系开发者 <a href="mailto:i@innei.in">Innei</a>
+            多次出现错误请联系此网站的运营者
+            <a href="mailto:ywb@stu.pku.edu.cn">杨汶帛</a>
             ，谢谢！
           </p>
         </h2>
