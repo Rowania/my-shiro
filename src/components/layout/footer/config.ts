@@ -44,12 +44,12 @@ export const defaultLinkSections: LinkSection[] = [
       },
       {
         name: '发邮件',
-        href: 'mailto:i@innei.in',
+        href: 'mailto:y2400013559@gmail.com',
         external: true,
       },
       {
         name: 'GitHub',
-        href: 'https://github.com/innei',
+        href: 'https://github.com/rowania',
         external: true,
       },
     ],
