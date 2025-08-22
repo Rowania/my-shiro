@@ -13,7 +13,7 @@ import {
   FaSolidFeatherAlt,
   FaSolidHistory,
   FaSolidUserFriends,
-  IcTwotoneSignpost,
+  IonBook,
   MdiFlask,
   MdiLightbulbOn20,
   RMixPlanet,
@@ -222,7 +222,7 @@ const windsock = [
     path: '/posts',
     type: 'Post',
     subMenu: [],
-    icon: IcTwotoneSignpost,
+    icon: IonBook,
   },
   {
     title: '手记',
